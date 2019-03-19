@@ -1,1 +1,3 @@
 tutorial-env is a virtual environment with the proper Python packages installed to enable the webscrapper to run.
+
+scrapper.py is the file containing the code to scrape the bloomingdales website. Currently, the code just scrapes the URLs of each item on a particular page and prints them out to the command line.
