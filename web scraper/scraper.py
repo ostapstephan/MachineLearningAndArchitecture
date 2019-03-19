@@ -1,4 +1,5 @@
 
+
 from bs4 import BeautifulSoup
 import requests
 
@@ -8,12 +9,13 @@ response = requests.get(url,headers=headers)
 content = BeautifulSoup(response.content,"html.parser")
 
 bowlArr = []
-print(response)
-#for item in content.findAll('a',attrs={"class":"productDescLink"},href=True):
-for item in content.findAll('a',attrs={"class":"productDescLink"}):
-	f = open("demofile.txt", "a")
-	f.write("Now the file has one more line!")
-	f.write(item.text.encode('utf-8'))
-	#print("Found the URL:", item['href'])
+print(response.status_code)
+for item in content.findAll('a',attrs={"class":"productDescLink"},href=True):
+	#f = open("demofile.txt", "a")
+	#f.write("Now the file has one more line!")
+	#f.write(item.text.encode('utf-8'))
+	print("Found the URL:", item['href'])
+# Next write the url to a file that can be easily parsed, iterate over each page.
+# Notice the category id in each URL is identical for each category
 
 
