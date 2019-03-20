@@ -41,11 +41,3 @@ for url in categorylist:
 		for item in page_content.findAll('a',attrs={"class":"productDescLink"},href=True): #loop over each thumbnail
 			f = open("item_urls.txt", "a")
 			f.write('https://www.bloomingdales.com' + item['href'] + '\n') #insert url into file
-
-		
-
-	# Code to iterate over multiple pages
-	# First must extract number of pages
-	# Then change the page index to scrape each
-	##https://www.bloomingdales.com/shop/home/bowls-trays-vases/Pageindex/2?id=1001541
-	#https://www.bloomingdales.com/shop/home/bowls-trays-vases/Pageindex/1?id=1001541
