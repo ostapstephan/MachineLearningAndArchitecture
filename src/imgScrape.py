@@ -3,12 +3,83 @@ import requests
 import re
 import time 
 import random
+import os
+import urllib
+import glob
+
+
+def scrapeImage(imgurl, filename):
+
+    # imgurl = "https://www.bloomingdales.com/shop/product/royal-copenhagen-blomst-tree-peony-teapot-100-exclusive?ID=3234650&CategoryID=1000234"
+    headers = {'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.186 Safari/537.36'}
+    response = requests.get(imgurl,headers=headers)
+
+    # content = BeautifulSoup(response.content,"html.parser")
+    soup = BeautifulSoup(response.content, "html.parser")
+    select = soup.find('img',attrs={"class":"main-image-img"})
+    x = select['src']
+    # print(x)
+    
+    imgsrc = urllib.request.urlopen(x)#,os.path.basename('./data/pics')
+    r= requests.get(x,allow_redirects=True)
+    open(filename,'wb').write(r.content)
+    
+
+categories = (glob.glob('./data/it*'))
+
+urlMatch = re.compile('https')   
+
+
+for i in categories: 
+    with open(i) as f:
+        lineNum = 0  
+        imgCategory = i.split("_urls_")[-1][:-4]
+        # z = input()  
+        for line in f: 
+            # read all lines, filter to make sure we have real urls and then
+            # download all the images
+            # dont forget to lag so you dont get banned 
+            mo = urlMatch.search(line)  
+            if mo:
+                #this is where you can scrape cuz we have a valid url
+                try: 
+                    fn =  "./data/images/"+imgCategory+str(lineNum)+'.tif' 
+                    scrapeImage(line,fn)  
+                    print( "successfully scraped: ",fn, line) 
+                    j = random.random()*1 +1 
+                    print("waiting:",j)
+                    time.sleep(j)
+                    lineNum +=1;
+                except Exception as e:
+                    print(e)
+                    print("Something Failed trying to continue")
+            else:
+                print('not availible')
+            
+            
+            # z = input() 
+
+
+exit()
+
+
+# print(type(x),imgsrc)
+# x = "https://images.bloomingdalesassets.com/is/image/BLM/products/1/optimized/10206571_fpx.tif?op_sharpen=1&wid=700&fit=fit,1&$filtersm$"
+
+
+# soup2 = BeautifulSoup(imgsrc)
+# html = urllib.request.urlopen(x)
+# img = soup.findall #get actual img url
+
+
+'''
+
 
 #this will scrape the 
 #url = 'https://www.bloomingdales.com/shop/makeup-perfume-beauty/luxury-perfume?id=1005889&cm_sp=NAVIGATION-_-TOP_NAV-_-1005889-Fragrance-Perfume'
 #url = 'https://www.bloomingdales.com/shop/home/bowls-trays-vases?id=1001541&cm_sp=NAVIGATION-_-TOP_NAV-_-1001541-Home-Decor-Bowls,-Trays-%26-Vases'
 #in case we want reading glasses again "https://www.bloomingdales.com/shop/jewelry-accessories/reading-glasses?id=1006684",
-# 
+
 
 UrlFile="data/item_urls_pillows.txt"
 categorylist = [ 
@@ -123,3 +194,4 @@ for url in categorylist:
             print(savedUrlinFile,' saved successfully')
         
     i+=1
+'''
