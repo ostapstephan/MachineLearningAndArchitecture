@@ -9,17 +9,17 @@ import glob
 
 
 def scrapeImage(imgurl, filename):
-
+    # print(imgurl)
     # imgurl = "https://www.bloomingdales.com/shop/product/royal-copenhagen-blomst-tree-peony-teapot-100-exclusive?ID=3234650&CategoryID=1000234"
+    # print(imgurl)
+    # return
     headers = {'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.186 Safari/537.36'}
     response = requests.get(imgurl,headers=headers)
-
     # content = BeautifulSoup(response.content,"html.parser")
     soup = BeautifulSoup(response.content, "html.parser")
     select = soup.find('img',attrs={"class":"main-image-img"})
-    x = select['src']
-    # print(x)
-    
+    x = select['src'] 
+    print("got html src",x)
     imgsrc = urllib.request.urlopen(x)#,os.path.basename('./data/pics')
     r= requests.get(x,allow_redirects=True)
     open(filename,'wb').write(r.content)
@@ -41,20 +41,29 @@ for i in categories:
             # dont forget to lag so you dont get banned 
             mo = urlMatch.search(line)  
             if mo:
+                j = random.random()*1 +1 
+
+                print('\n\n\n')
+                print("waiting:",j, "seconds")
+                time.sleep(j)
+                lineNum +=1;
+
                 #this is where you can scrape cuz we have a valid url
                 try: 
                     fn =  "./data/images/"+imgCategory+str(lineNum)+'.tif' 
-                    scrapeImage(line,fn)  
-                    print( "successfully scraped: ",fn, line) 
-                    j = random.random()*1 +1 
-                    print("waiting:",j)
-                    time.sleep(j)
-                    lineNum +=1;
+                    
+                    if not line.find('''Category URL:''') == -1:
+                        print('cat url found... skipping: ',line[:-1])
+                    else:   
+                        scrapeImage(line[:-1],fn)  
+                        print( "successfully scraped: ", line[:-1]) 
+                        print("Saved to: ", fn)
                 except Exception as e:
+                    
                     print(e)
                     print("Something Failed trying to continue")
             else:
-                print('not availible')
+                print('no link on this line')
             
             
             # z = input() 
